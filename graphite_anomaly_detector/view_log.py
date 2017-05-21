@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from util.logger import view_logfile
+from .util.logger import view_logfile
 from pylab import show
 
 import sys

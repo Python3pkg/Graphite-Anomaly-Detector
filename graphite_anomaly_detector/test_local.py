@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-from detector import SpikeDetector
-from util.plot import plot_data
+from .detector import SpikeDetector
+from .util.plot import plot_data
 
 import sys
 import json

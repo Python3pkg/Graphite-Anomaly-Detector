@@ -8,7 +8,7 @@ import time
 import sys
 
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-from detector import SpikeDetector
+from .detector import SpikeDetector
 
 DESCRIPTION = "Generates CSV report with spikes found on Graphite hosts"
 
@@ -33,7 +33,7 @@ def get_host_targets(host_string, pattern):
 
         targets = [t for t in targets if fnmatch.fnmatch(t, pattern)]
     except Exception as e:
-        print 'Exception occured while getting host target: %s' % e
+        print('Exception occured while getting host target: %s' % e)
     finally:
         return targets
 
@@ -64,8 +64,8 @@ def get_timeseries(host_string, target):
         timeseries = [t[0] for t in detector_data]
         timestamps = [t[1] for t in detector_data]
     except Exception as e:
-        print 'Exception occured while getting timeseries' \
-              'for %s with target %s: %s' % (host_string, target, e)
+        print('Exception occured while getting timeseries' \
+              'for %s with target %s: %s' % (host_string, target, e))
 
     finally:
         return timeseries, timestamps
@@ -84,7 +84,7 @@ def process_targets(targets, timeout, csv_writer, detector):
 
     # Send requests without timeouts to all servers
     while len(targets) != 0:
-        for host_string in targets.keys():
+        for host_string in list(targets.keys()):
             # Check remaining targets
             if len(targets[host_string]) == 0:
                 del targets[host_string]
@@ -99,14 +99,14 @@ def process_targets(targets, timeout, csv_writer, detector):
             try:
                 anomalies = detector.detect_anomalies(timeseries, timestamps)
             except Exception as e:
-                print 'Exception occured during detect_anomalies: %s' % e
+                print('Exception occured during detect_anomalies: %s' % e)
 
             for timestamp, priority in anomalies:
                 data = [host_string, target, time.ctime(timestamp), priority,
                         get_anomaly_url(host_string, target, timestamp)]
                 csv_writer.writerow(data)
 
-            print 'Processed %s' % target
+            print('Processed %s' % target)
 
         # Sleep bethween requests
         time.sleep(timeout)

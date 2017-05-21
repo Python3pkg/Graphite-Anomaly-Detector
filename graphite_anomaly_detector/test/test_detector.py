@@ -15,7 +15,7 @@ class TestDetector(TestCase):
     def test_sparse_timeseries(self):
         """Test that sparse timeseries raise ValueError"""
         timeseries = [1, None, None, None, None, 2]
-        timestamps = range(len(timeseries))
+        timestamps = list(range(len(timeseries)))
 
         self.assertRaises(ValueError,
                           self.detector.detect_anomalies,

@@ -18,7 +18,7 @@ class Detector(object):
 
     @classmethod
     def convert_null_values(cls, timeseries):
-        for i in xrange(len(timeseries)):
+        for i in range(len(timeseries)):
             timeseries[i] = 0 if timeseries[i] is None else timeseries[i]
 
     @classmethod
@@ -31,14 +31,14 @@ class Detector(object):
 
         [4 10 6] will become [4 5 6]
         """
-        for l in xrange(level):
+        for l in range(level):
             cls._smooth_data(timeseries)
 
 
     @classmethod
     def _smooth_data(cls, timeseries):
         """Smooth local maxima and minima"""
-        for i in xrange(1, len(timeseries) - 1):
+        for i in range(1, len(timeseries) - 1):
             left = timeseries[i - 1]
             right = timeseries[i + 1]
             if left < timeseries[i] and right < timeseries[i]:

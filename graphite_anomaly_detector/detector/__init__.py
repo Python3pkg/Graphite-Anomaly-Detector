@@ -1,1 +1,1 @@
-from spike_detector import SpikeDetector
+from .spike_detector import SpikeDetector

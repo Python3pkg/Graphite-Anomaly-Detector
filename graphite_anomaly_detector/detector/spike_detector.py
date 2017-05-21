@@ -1,5 +1,5 @@
-from detector import Detector
-from saxpy import SAX
+from .detector import Detector
+from .saxpy import SAX
 
 import numpy
 import string
@@ -14,7 +14,7 @@ class SpikeDetector(Detector):
     def _get_local_maxima(cls, timeseries):
         """Return all local maxima in timeseries"""
         ret = []
-        for i in xrange(1, len(timeseries) - 1):
+        for i in range(1, len(timeseries) - 1):
             left = timeseries[i - 1]
             right = timeseries[i + 1]
             if timeseries[i] > left and timeseries[i] > right:
@@ -61,23 +61,23 @@ class SpikeDetector(Detector):
         words, intervals = sax_generator.sliding_window(timeseries, num_windows, .8)
 
         # Times index i is a maximal value
-        maximum_count = {i: 0 for i in xrange(len(timeseries))}
+        maximum_count = {i: 0 for i in range(len(timeseries))}
         # Times index i is passed by a window
-        window_count = {i: 0 for i in xrange(len(timeseries))}
+        window_count = {i: 0 for i in range(len(timeseries))}
 
         # Count in how many windows a timestamp is a local maximum
-        for i in xrange(len(words)):
+        for i in range(len(words)):
             word = words[i]
             interval = intervals[i]
 
-            for j in xrange(len(word)):
+            for j in range(len(word)):
                 index = j * symbols_per_datapoint + interval[0]
                 if word[j] == string.ascii_lowercase[cls.ALPHABET_SIZE - 1]:
                     maximum_count[index] += 1
                 window_count[index] += 1
 
         spikes = { }
-        for key, value in maximum_count.iteritems():
+        for key, value in maximum_count.items():
             if value == window_count[key] and value and \
                timeseries[key] > treshold:
                    val = timeseries[key]
@@ -92,12 +92,12 @@ class SpikeDetector(Detector):
 
         while len(spikes):
             # Get the spike with the maximum priority
-            max_ts = max(spikes.iteritems(), key=operator.itemgetter(1))[0]
+            max_ts = max(iter(spikes.items()), key=operator.itemgetter(1))[0]
 
             if spikes[max_ts] > .2:
                 ret.append((max_ts, spikes[max_ts]))
 
-            spikes = { k: v for k, v in spikes.iteritems() \
+            spikes = { k: v for k, v in spikes.items() \
                        if abs(k - max_ts) > duration }
 
         return ret
